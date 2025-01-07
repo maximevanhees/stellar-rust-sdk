@@ -36,7 +36,7 @@ pub fn pagination(args: TokenStream, input: TokenStream) -> TokenStream {
 
     // Create required fields to be added to the struct.
     let cursor_field: Field = syn::parse_quote! {
-        pub cursor: Option<u32>
+        pub cursor: Option<String>
     };
     let limit_field: Field = syn::parse_quote! {
         pub limit: Option<u8>
@@ -61,11 +61,7 @@ pub fn pagination(args: TokenStream, input: TokenStream) -> TokenStream {
     let expanded = quote! {
         #input
         impl #impl_generics #struct_name #type_generics #where_clause {
-            pub fn set_cursor(self, cursor: u32) -> Result<Self, String> {
-                // Always accept the cursor since it's non-optional in the setter
-                if cursor < 1 {
-                    return Err("Cursor must be greater than or equal to 1.".to_string());
-                }
+            pub fn set_cursor(self, cursor: String) -> Result<Self, String> {
 
                 Ok(Self { cursor: Some(cursor), ..self })
             }
